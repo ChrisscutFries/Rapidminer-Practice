@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="10.3.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="10.3.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="10.3.001" expanded="true" height="68" name="Retrieve customer_profile" width="90" x="45" y="34">
+        <parameter key="repository_entry" value="data/customer_profile"/>
+      </operator>
+      <operator activated="true" class="blending:select_attributes" compatibility="10.3.001" expanded="true" height="82" name="Cleaning" width="90" x="45" y="136">
+        <parameter key="type" value="include attributes"/>
+        <parameter key="attribute_filter_type" value="all attributes"/>
+        <parameter key="select_attribute" value=""/>
+        <parameter key="select_subset" value=""/>
+        <parameter key="also_apply_to_special_attributes_(id,_label..)" value="false"/>
+      </operator>
+      <operator activated="true" class="replace" compatibility="10.3.001" expanded="true" height="82" name="Cleaning Date" width="90" x="45" y="238">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="Dt_Customer"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="nominal"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="file_path"/>
+        <parameter key="block_type" value="single_value"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="single_value"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="replace_what" value="-"/>
+        <parameter key="replace_by" value="/"/>
+      </operator>
+      <operator activated="true" class="replace_missing_values" compatibility="10.3.001" expanded="true" height="103" name="Cleaning Income" width="90" x="45" y="340">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="Income"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="default" value="average"/>
+        <list key="columns"/>
+      </operator>
+      <operator activated="true" class="blending:select_attributes" compatibility="10.3.001" expanded="true" height="82" name="Cleansed Data Selected" width="90" x="45" y="493">
+        <parameter key="type" value="include attributes"/>
+        <parameter key="attribute_filter_type" value="all attributes"/>
+        <parameter key="select_attribute" value=""/>
+        <parameter key="select_subset" value="AcceptedCmp1␞AcceptedCmp2␞AcceptedCmp3␞AcceptedCmp4␞AcceptedCmp5␞Education␞Marital_Status␞NumCatalogPurchases␞NumDealsPurchases␞NumStorePurchases␞NumWebPurchases␞Year_Birth␞Z_Revenue"/>
+        <parameter key="also_apply_to_special_attributes_(id,_label..)" value="false"/>
+      </operator>
+      <operator activated="true" class="blending:select_attributes" compatibility="10.3.001" expanded="true" height="82" name="Select Att 1" width="90" x="179" y="391">
+        <parameter key="type" value="include attributes"/>
+        <parameter key="attribute_filter_type" value="a subset"/>
+        <parameter key="select_attribute" value=""/>
+        <parameter key="select_subset" value="Kidhome␞MntSweetProducts␞MntWines␞Teenhome"/>
+        <parameter key="also_apply_to_special_attributes_(id,_label..)" value="false"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="10.3.001" expanded="true" height="103" name="No Children Fltr" width="90" x="313" y="391">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="Kidhome.eq.0"/>
+          <parameter key="filters_entry_key" value="Teenhome.eq.0"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="concurrency:k_means" compatibility="10.3.001" expanded="true" height="82" name="Clustering" width="90" x="447" y="391">
+        <parameter key="add_cluster_attribute" value="true"/>
+        <parameter key="add_as_label" value="false"/>
+        <parameter key="remove_unlabeled" value="false"/>
+        <parameter key="k" value="4"/>
+        <parameter key="max_runs" value="10"/>
+        <parameter key="determine_good_start_values" value="false"/>
+        <parameter key="measure_types" value="BregmanDivergences"/>
+        <parameter key="mixed_measure" value="MixedEuclideanDistance"/>
+        <parameter key="nominal_measure" value="NominalDistance"/>
+        <parameter key="numerical_measure" value="EuclideanDistance"/>
+        <parameter key="divergence" value="SquaredEuclideanDistance"/>
+        <parameter key="kernel_type" value="radial"/>
+        <parameter key="kernel_gamma" value="1.0"/>
+        <parameter key="kernel_sigma1" value="1.0"/>
+        <parameter key="kernel_sigma2" value="0.0"/>
+        <parameter key="kernel_sigma3" value="2.0"/>
+        <parameter key="kernel_degree" value="3.0"/>
+        <parameter key="kernel_shift" value="1.0"/>
+        <parameter key="kernel_a" value="1.0"/>
+        <parameter key="kernel_b" value="0.0"/>
+        <parameter key="max_optimization_steps" value="100"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="10.3.001" expanded="true" height="82" name="No Children (2)" width="90" x="581" y="442">
+        <parameter key="csv_file" value="/Users/mareyrey/Downloads/No_Children.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="date_format" value="yyyy-MM-dd HH:mm:ss"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <operator activated="true" class="blending:select_attributes" compatibility="10.3.001" expanded="true" height="82" name="Select Att 2" width="90" x="179" y="493">
+        <parameter key="type" value="include attributes"/>
+        <parameter key="attribute_filter_type" value="a subset"/>
+        <parameter key="select_attribute" value=""/>
+        <parameter key="select_subset" value="Kidhome␞MntSweetProducts␞MntWines␞Teenhome"/>
+        <parameter key="also_apply_to_special_attributes_(id,_label..)" value="false"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="10.3.001" expanded="true" height="103" name="With Childre Fltr" width="90" x="313" y="493">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="Kidhome.gt.0"/>
+          <parameter key="filters_entry_key" value="Teenhome.gt.0"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="concurrency:k_means" compatibility="10.3.001" expanded="true" height="82" name="Clustering (2)" width="90" x="447" y="493">
+        <parameter key="add_cluster_attribute" value="true"/>
+        <parameter key="add_as_label" value="false"/>
+        <parameter key="remove_unlabeled" value="false"/>
+        <parameter key="k" value="4"/>
+        <parameter key="max_runs" value="10"/>
+        <parameter key="determine_good_start_values" value="false"/>
+        <parameter key="measure_types" value="BregmanDivergences"/>
+        <parameter key="mixed_measure" value="MixedEuclideanDistance"/>
+        <parameter key="nominal_measure" value="NominalDistance"/>
+        <parameter key="numerical_measure" value="EuclideanDistance"/>
+        <parameter key="divergence" value="SquaredEuclideanDistance"/>
+        <parameter key="kernel_type" value="radial"/>
+        <parameter key="kernel_gamma" value="1.0"/>
+        <parameter key="kernel_sigma1" value="1.0"/>
+        <parameter key="kernel_sigma2" value="0.0"/>
+        <parameter key="kernel_sigma3" value="2.0"/>
+        <parameter key="kernel_degree" value="3.0"/>
+        <parameter key="kernel_shift" value="1.0"/>
+        <parameter key="kernel_a" value="1.0"/>
+        <parameter key="kernel_b" value="0.0"/>
+        <parameter key="max_optimization_steps" value="100"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="10.3.001" expanded="true" height="82" name="With Children (2)" width="90" x="581" y="544">
+        <parameter key="csv_file" value="/Users/mareyrey/Downloads/With_children.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="date_format" value="yyyy-MM-dd HH:mm:ss"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <operator activated="true" class="model_simulator:cluster_model_visualizer" compatibility="10.3.001" expanded="true" height="103" name="With Children" width="90" x="715" y="493"/>
+      <operator activated="true" class="model_simulator:cluster_model_visualizer" compatibility="10.3.001" expanded="true" height="103" name="No Children" width="90" x="715" y="391"/>
+      <connect from_op="Retrieve customer_profile" from_port="output" to_op="Cleaning" to_port="example set input"/>
+      <connect from_op="Cleaning" from_port="example set output" to_op="Cleaning Date" to_port="example set input"/>
+      <connect from_op="Cleaning Date" from_port="example set output" to_op="Cleaning Income" to_port="example set input"/>
+      <connect from_op="Cleaning Income" from_port="example set output" to_op="Cleansed Data Selected" to_port="example set input"/>
+      <connect from_op="Cleansed Data Selected" from_port="example set output" to_op="Select Att 1" to_port="example set input"/>
+      <connect from_op="Cleansed Data Selected" from_port="original" to_op="Select Att 2" to_port="example set input"/>
+      <connect from_op="Select Att 1" from_port="example set output" to_op="No Children Fltr" to_port="example set input"/>
+      <connect from_op="No Children Fltr" from_port="example set output" to_op="Clustering" to_port="example set"/>
+      <connect from_op="Clustering" from_port="cluster model" to_op="No Children" to_port="model"/>
+      <connect from_op="Clustering" from_port="clustered set" to_op="No Children (2)" to_port="input"/>
+      <connect from_op="No Children (2)" from_port="through" to_op="No Children" to_port="clustered data"/>
+      <connect from_op="Select Att 2" from_port="example set output" to_op="With Childre Fltr" to_port="example set input"/>
+      <connect from_op="With Childre Fltr" from_port="example set output" to_op="Clustering (2)" to_port="example set"/>
+      <connect from_op="Clustering (2)" from_port="cluster model" to_op="With Children" to_port="model"/>
+      <connect from_op="Clustering (2)" from_port="clustered set" to_op="With Children (2)" to_port="input"/>
+      <connect from_op="With Children (2)" from_port="through" to_op="With Children" to_port="clustered data"/>
+      <connect from_op="With Children" from_port="visualizer output" to_port="result 3"/>
+      <connect from_op="With Children" from_port="model output" to_port="result 4"/>
+      <connect from_op="No Children" from_port="visualizer output" to_port="result 1"/>
+      <connect from_op="No Children" from_port="model output" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+      <portSpacing port="sink_result 5" spacing="0"/>
+    </process>
+  </operator>
+</process>
